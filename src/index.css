@@ -55,3 +55,12 @@ h3{
 .action{
   margin-left: 55px;
 }
+
+.null-data{
+  font-size: 2rem;
+  font-weight: 500;
+  color: rgb(202, 202, 202);
+  justify-content: center;
+  align-items: center;
+  
+}

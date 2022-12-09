@@ -25,17 +25,15 @@ const jobReducer = (state = initialState, action) =>{
         
 
         case "UPDATE_JOB":
-            const updateJob = [state.map(job=>job.id ===action.payload.id?action.payload :job)];
+            const updateJob = state.map(job=>job.id ===action.payload.id? action.payload :job)
             state = updateJob
-            console.log('this is from reducer',state)
             return state;
-            // return {
-            //     ...state,
-            //     state: [
-            //       action.payload,
-            //       state.filter((job) => job.id !== action.payload.id),
-            //     ],
-            //   };
+
+        case "DELETE_JOB":
+            const filteritems = state.filter(job=>job.id !==action.payload && job)
+            state = filteritems
+            return state;
+          
         default: 
             
         return state;

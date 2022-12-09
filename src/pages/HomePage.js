@@ -1,15 +1,13 @@
-import React, {useState, useEffect } from "react";
+import React, {useState} from "react";
 import { useSelector, useDispatch } from 'react-redux'
 // import JobCard from '../components/JobCard'
 import { Col, Tabs, Row,Card,Input,Button,Form, DatePicker,Avatar, Popover,Popconfirm,Space} from 'antd';
-import { useParams, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {EditOutlined,DeleteOutlined,MoreOutlined} from "@ant-design/icons";
-
-
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
-const layout2 = { labelCol: { span: 10 }, wrapperCol: { span: 12 } }
+const layout2 = { labelCol: { span: 8 }, wrapperCol: { span: 8 } }
 const {TextArea} = Input
 
 function HomePage(props) {
@@ -46,10 +44,13 @@ function HomePage(props) {
         })
       }
 
-    const resetForm = () =>{
-        JobForm.resetFields()
-    
+
+      const deleteCurrentJob = ()=>{
+        dispatch({type:"DELETE_JOB", payload:state.currentJob.id})
+        submitCallback()
+
       }
+
 
     const resetStates = ()=>{
         setState((prevState) => ({
@@ -62,10 +63,9 @@ function HomePage(props) {
     const submitCallback = ()=>{
         JobForm.resetFields()
         resetStates()
-        
-    
     
       }
+
 
     const changeTab = (key) => {
       setState((prevState) => ({
@@ -77,23 +77,16 @@ function HomePage(props) {
     };
 
     const tabChange =(id)=>{
-
         const item = allJobs.jobReducer.find(item=> item.id === id)
-        console.log(item)
-
-
-
         setState((prevState) => ({
             ...prevState,
             activeTab: "3",
             currentJob: item,
         }))
-        console.log("clicked", id)
     }
 
     const setJobId = (id)=>{
         let current = allJobs.jobReducer.find(item=> item.id === id)
-        console.log(current)
         if (current){
             setState((prevState) => ({
                 ...prevState,
@@ -104,22 +97,25 @@ function HomePage(props) {
         }
     }
 
+
   const { activeTab } = state;
 
   return (
-<div className='main-section'> 
+<div> 
 
 
 <Tabs centered defaultActiveKey="1" activeKey={activeTab} onChange={changeTab} >
    
 <TabPane tab="Jobs" key="1">
+<div className='main-section'>
 <div style={{ textAlign: "right" }}>
         <Button type="primary" onClick={() => changeTab("2")}>Add Job</Button>
     </div>
+   
 <Row   gutter={2}>
-    {allJobs.jobReducer.map(item=>
-    <Col lg={{ span: 8,offset:3 }} md={{ span: 10, }} sm={{ span: 12 }} >
-      <div  style={{ padding: "30px 0" }}>
+     {allJobs.jobReducer.length >0? allJobs.jobReducer.map(item=>
+    <Col lg={{ span: 8,offset:3 }} md={{ span: 12, }} sm={{ span: 12 }} >
+      <div  style={{ padding: "15px 0" }}>
       <Link  onClick={()=>tabChange(item.id)}>
     <Card hoverable>
 
@@ -147,13 +143,14 @@ function HomePage(props) {
   </div>
  
    </Col>
-        )}
+        ): <div className="null-data">Please Add New Job</div>}
 
 </Row>
+</div>
 </TabPane>
 <TabPane centered key="2">
-    <div style={{ marginLeft:"25%" }} >
-<Form   layout="vertical" {...layout2} style={{ padding: '16px 5vw'}}
+    <div  >
+<Form   {...layout2} style={{ padding: '16px 5vw'}}
 onFinish={submitFormData} 
 form={JobForm}>
 <Form.Item label="Job Title" name='job_title' 
@@ -166,7 +163,7 @@ rules={
 <Input placeholder=""  />
 </Form.Item>
 
-<Form.Item label="Company Nalme" name='company_name' 
+<Form.Item label="Company Name" name='company_name' 
 rules={
     [{
         required: true,
@@ -187,12 +184,14 @@ rules={
           <TextArea rows={4} />
         </Form.Item>
 
-<Form.Item style={{ justifyContent: 'center' }}>
+        <Form.Item >
+                        <Row style={{ justifyContent: 'right', marginRight:"-80px"}}>
     {state.currentJob?
 <Button type="primary" htmlType="submit" style={{ background: "#4A9D45", borderColor: "#4A9D45" }} >Update Job</Button>
-:<Button type="primary" htmlType="submit" style={{ background: "#4A9D45", borderColor: "#4A9D45" }} >Submit</Button>
+:<Button type="primary" htmlType="submit" >Submit</Button>
 
 }
+</Row>
 </Form.Item>
 
 </Form>
@@ -220,12 +219,12 @@ rules={
                     </Button>
                 }
                 {
-            //     <Popconfirm title={`Are you sure you want to delete '${record.name}' Role`} onConfirm={() => props.deleteResourceRole(record.id, submitCallback)}>
-            //       <Button danger icon={<DeleteOutlined style={{ fontSize: 17, color: '#f65314' }}/>}
-            //       >
-            //         Delete
-            //       </Button>
-            //    </Popconfirm>
+                <Popconfirm title={'Are you sure you want to delete it'} onConfirm={() =>  deleteCurrentJob()}>
+                  <Button danger icon={<DeleteOutlined style={{ fontSize: 17, color: '#f65314' }}/>}
+                  >
+                    Delete
+                  </Button>
+               </Popconfirm>
                 }
               
               </Space>

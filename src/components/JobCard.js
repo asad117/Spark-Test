@@ -9,7 +9,7 @@ function JobCard(props) {
 
   return (
     <div  style={{ padding: "30px 0" }}>
-      <Link path={`view/${props.item.id}`}>
+      <Link path={`view/${props.item.id}`} onClick={props.change}>
     <Card hoverable>
       <h3>{props.item.job_title}</h3>
     <Meta
